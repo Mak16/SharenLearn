@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NotesUploadActivity">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/upload_notes_logo_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/book3"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp"
+        android:layout_marginTop="20dp"/>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Title"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:id="@+id/ttl_notes_title"
+        android:padding="10dp"
+        android:layout_below="@+id/upload_notes_logo_image"
+        >
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/et_notes_title"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Description"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:id="@+id/ttl_notes_description"
+        android:layout_below="@id/ttl_notes_title"
+        android:padding="10dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/et_notes_description"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <Spinner
+        android:id="@+id/spinner_notes_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/spinner_title"
+        android:layout_below="@+id/ttl_notes_description"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_centerHorizontal="true"
+        />
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Download Link"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:id="@+id/ttl_notes_download_link"
+        android:layout_below="@id/spinner_notes_category"
+        android:padding="10dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/et_notes_download_link"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Image Link"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:id="@+id/ttl_notes_image_link"
+        android:layout_below="@id/ttl_notes_download_link"
+        android:padding="10dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/et_note_image_link"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/bt_notes_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ttl_notes_image_link"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Upload"
+        android:background="#2196F3"
+        android:textColor="#fff"
+      />
+
+
+
+</RelativeLayout>

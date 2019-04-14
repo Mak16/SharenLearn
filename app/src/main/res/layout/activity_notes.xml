@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NotesActivity"
+    android:id="@+id/notes_relative_layout"
+    android:background="#A2A2A5">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="#114E49"
+        android:outlineSpotShadowColor="#474545"
+        app:title="Notes"
+        app:titleTextColor="#fff"
+        app:titleMarginStart="30dp"
+        android:layout_alignParentTop="true"
+        android:id="@+id/notes_toolbar"
+        />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_notes_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/notes_toolbar"
+        tools:listitem="@layout/notes_list_item"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"/>
+
+</RelativeLayout>

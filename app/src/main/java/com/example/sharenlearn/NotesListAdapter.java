@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,15 +21,17 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.NoteListViewHolder> {
+public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.NoteListViewHolder> implements Filterable {
 
 
     ArrayList<Notes> NotesList;
+    ArrayList<Notes> newNotes ;
     Context context;
 
     public NotesListAdapter(Context context,ArrayList<Notes> NotesList)
     {
         this.NotesList = NotesList;
+        this.newNotes = NotesList;
         this.context=context;
     }
     @NonNull
@@ -46,7 +50,7 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
 
     @Override
     public void onBindViewHolder(@NonNull final NoteListViewHolder noteListViewHolder, int i) {
-        final Notes notes = NotesList.get(i);
+        final Notes notes = newNotes.get(i);
         noteListViewHolder.tv_title.setText(notes.getTitle());
         noteListViewHolder.tv_category.setText(notes.getCategory());
         noteListViewHolder.tv_description.setText(notes.getDescription());
@@ -89,7 +93,7 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
 
     @Override
     public int getItemCount() {
-        return NotesList.size();
+        return newNotes.size();
     }
 
     public class NoteListViewHolder extends RecyclerView.ViewHolder{
@@ -108,5 +112,40 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
 //            recyclerView = itemView.findViewById(R.id.rl_parent_notes_layout);
         }
 
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String query = constraint.toString();
+                ArrayList<Notes> nNotes= new ArrayList<>();
+                if(query.isEmpty())
+                        nNotes = NotesList;
+                else
+                {
+                    for(Notes note : NotesList)
+                    {
+                        if( note.getTitle().toLowerCase().contains(query.toLowerCase()) )
+//                                ||
+//                            note.getCategory().toLowerCase().contains(query.toLowerCase()) ||
+//                            note.getDescription().toLowerCase().contains(query.toLowerCase()) )
+                        {
+                            nNotes.add(note);
+                        }
+                    }
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = nNotes;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                newNotes = (ArrayList<Notes>) results.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 }

@@ -1,11 +1,21 @@
 package com.example.sharenlearn;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -13,6 +23,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.mancj.materialsearchbar.MaterialSearchBar;
+import com.mancj.materialsearchbar.SimpleOnSearchActionListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,11 +42,66 @@ public class NotesActivity extends AppCompatActivity {
     RecyclerView rv_notes_list;
     int DeaultTime = 10000;
     String title_search,category_search,uploader_search;
+    ArrayList<String> lastSearches;
+    Toolbar toolbar;
+    SearchView searchView;
+    SwipeRefreshLayout swipeRefreshLayout;
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_notes, menu);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem mSearchmenuItem = menu.findItem(R.id.menu_toolbarsearch);
+        searchView = (SearchView) mSearchmenuItem.getActionView();
+        searchView.setQueryHint("Search Notes");
+
+
+        searchView.setOnQueryTextListener(
+                new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String s) {
+                        Toast.makeText(NotesActivity.this,"onQueryTextSubmit",Toast.LENGTH_SHORT).show();
+                        notesListAdapter.getFilter().filter(s);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String s) {
+                        Toast.makeText(NotesActivity.this,"onQueryTextChange",Toast.LENGTH_SHORT).show();
+                        notesListAdapter.getFilter().filter(s);
+                        return false;
+                    }
+                }
+        );
+//        Log.d(TAG, "onCreateOptionsMenu: mSearchmenuItem->" + mSearchmenuItem.getActionView());
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case android.R.id.home : {
+                finish();}
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes);
+
+        //create search bar
+
+        toolbar = findViewById(R.id.notes_toolbar);
+        swipeRefreshLayout = findViewById(R.id.srl_notes);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         notesList = new ArrayList<>();
         Intent intent = getIntent();
@@ -58,6 +125,17 @@ public class NotesActivity extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(this);
         rv_notes_list.setLayoutManager(linearLayoutManager);
         rv_notes_list.setHasFixedSize(true);
+
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        //        getAllNotes("gate","BE");
+                        notesList = new ArrayList<>();
+                        getAllNotes(title_search,category_search,uploader_search);
+                    }
+                }
+        );
     }
 
     public void getAllNotes(final String TITLE, final String CATEGORY,final String UPLOADER) {
@@ -66,6 +144,7 @@ public class NotesActivity extends AppCompatActivity {
 
         //pDialog.setMessage("Logging in ...");
         //showDialog();
+        swipeRefreshLayout.setRefreshing(true);
 
         StringRequest strReq = new StringRequest(Request.Method.POST,
                 AppConfig.URL_BOOKS_DATA, new Response.Listener<String>() {
@@ -118,6 +197,7 @@ public class NotesActivity extends AppCompatActivity {
 //                        finish();
 
 
+                        swipeRefreshLayout.setRefreshing(false);
                         notesListAdapter = new NotesListAdapter(NotesActivity.this,notesList);
                         rv_notes_list.setAdapter(notesListAdapter);
                         Toast.makeText(NotesActivity.this,"download successful !!! ",Toast.LENGTH_LONG).show();
